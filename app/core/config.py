@@ -17,9 +17,16 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = "localhost"
     POSTGRES_PORT: str = "5432"
     POSTGRES_DB: str = "postgres"
+    CLOUD_SQL_CONNECTION_NAME: str = ""
 
     @property
     def DATABASE_URL(self) -> str:
+        if self.CLOUD_SQL_CONNECTION_NAME:
+            return (
+                f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+                f"@/{self.POSTGRES_DB}"
+                f"?host=/cloudsql/{self.CLOUD_SQL_CONNECTION_NAME}"
+            )
         return (
             f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
